@@ -8,7 +8,7 @@ STUDENT_CSV=/code/data/students.csv
 STUDENT_EXAM_CSV=/code/data/student_exams.csv
 STUDENT_FEES_CSV=/code/data/student_fees.csv
 CDR_CSV=/code/data/cdr_data.csv
-CDR_OFFLINE_CSV=data/cdr_data.csv
+CDR_OFFLINE_CSV=/code/data/cdr_data.csv
 
 clients:
 	docker build docker -t startree/genai
@@ -141,7 +141,7 @@ cdr_hybrid_recipe: infra check cdr_topics cdr_hybrid_tables
 
 loader: clients
 	@docker run -it \
-		--network recipes_default \
+		--network $(DOCKER_NETWORK) \
 		--volume $(shell pwd)/config:/code/config \
 		-e OPENAI_API_KEY=${OPENAI_API_KEY} \
 		-e MAX_DEPTH=${MAX_DEPTH} \
@@ -150,28 +150,28 @@ loader: clients
 
 student_loader: clients
 	@docker run -it \
-		--network recipes_default \
+		--network $(DOCKER_NETWORK) \
 		--volume $(shell pwd):/code \
 		startree/genai \
 		python student_loader.py ${STUDENT_CSV}
 
 student_exam_loader: clients
 	@docker run -it \
-		--network recipes_default \
+		--network $(DOCKER_NETWORK) \
 		--volume $(shell pwd):/code \
 		startree/genai \
 		python student_exam_loader.py ${STUDENT_EXAM_CSV}
 
 student_fees_loader: clients
 	@docker run -it \
-		--network recipes_default \
+		--network $(DOCKER_NETWORK) \
 		--volume $(shell pwd):/code \
 		startree/genai \
 		python student_fees_loader.py ${STUDENT_FEES_CSV}
 
 cdr_loader: clients
 	@docker run -it \
-		--network recipes_default \
+		--network $(DOCKER_NETWORK) \
 		--volume $(shell pwd):/code \
 		startree/genai \
 		python cdr_loader.py ${CDR_CSV}
@@ -188,14 +188,14 @@ cdr_offline_loader:
 
 question: clients
 	@docker run -it \
-	 	--network recipes_default \
+	 	--network $(DOCKER_NETWORK) \
 		-e OPENAI_API_KEY=${OPENAI_API_KEY} \
 		startree/genai \
 		python genai.py ${QUERY}
 
 student_question: clients
 	@docker run -it \
-	 	--network recipes_default \
+	 	--network $(DOCKER_NETWORK) \
 		--volume $(shell pwd)/output:/code/output \
 		-e OPENAI_API_KEY=${OPENAI_API_KEY} \
 		-e QUERY_MODE=student \

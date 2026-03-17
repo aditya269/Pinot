@@ -98,7 +98,7 @@ make student_fees_loader
 
 ```
 
-To load a different file, point `STUDENT_CSV` at a CSV mounted from this recipe directory:
+To load a different file, point `STUDENT_CSV` at a CSV path inside the container under `/code`, which maps to the local `genai` directory:
 
 ```bash
 make student_loader STUDENT_CSV=/code/data/my_students.csv
