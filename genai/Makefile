@@ -8,7 +8,7 @@ STUDENT_CSV=/code/data/students.csv
 STUDENT_EXAM_CSV=/code/data/student_exams.csv
 STUDENT_FEES_CSV=/code/data/student_fees.csv
 CDR_CSV=/code/data/cdr_data.csv
-CDR_OFFLINE_CSV=/code/data/cdr_data.csv
+CDR_OFFLINE_CSV=data/cdr_data.csv
 
 clients:
 	docker build docker -t startree/genai

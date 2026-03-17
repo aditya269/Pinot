@@ -15,6 +15,12 @@ student_exam_recipe:
 student_fees_recipe:
 	$(MAKE) -C genai student_fees_recipe
 
+cdr_recipe:
+	$(MAKE) -C genai cdr_recipe
+
+cdr_hybrid_recipe:
+	$(MAKE) -C genai cdr_hybrid_recipe
+
 student_loader:
 	$(MAKE) -C genai student_loader
 
@@ -23,6 +29,24 @@ student_exam_loader:
 
 student_fees_loader:
 	$(MAKE) -C genai student_fees_loader
+
+cdr_loader:
+	$(MAKE) -C genai cdr_loader
+
+cdr_offline_loader:
+	$(MAKE) -C genai cdr_offline_loader
+
+cdr_topics:
+	$(MAKE) -C genai cdr_topics
+
+cdr_tables:
+	$(MAKE) -C genai cdr_tables
+
+cdr_offline_tables:
+	$(MAKE) -C genai cdr_offline_tables
+
+cdr_hybrid_tables:
+	$(MAKE) -C genai cdr_hybrid_tables
 
 student_question:
 	$(MAKE) -C genai student_question
