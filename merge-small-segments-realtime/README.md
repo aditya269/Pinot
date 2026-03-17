@@ -24,8 +24,8 @@
 Clone this repository and navigate to this recipe:
 
 ```bash
-git clone git@github.com:startreedata/pinot-recipes.git
-cd pinot-recipes/recipes/merge-small-segments-realtime
+git clone https://github.com/aditya269/Pinot.git
+cd merge-small-segments-realtime
 ```
 
 Spin up a Pinot cluster using Docker Compose:

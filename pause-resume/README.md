@@ -22,8 +22,8 @@
 ***
 
 ```bash
-git clone git@github.com:startreedata/pinot-recipes.git
-cd pinot-recipes/recipes/pause-resume
+git clone https://github.com/aditya269/Pinot.git
+cd pause-resume
 ```
 
 Spin up a Pinot cluster using Docker Compose:

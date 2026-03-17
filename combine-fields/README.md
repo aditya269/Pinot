@@ -27,8 +27,8 @@
 Clone this repository and navigate to this recipe:
 
 ```bash
-git clone git@github.com:startreedata/pinot-recipes.git
-cd pinot-recipes/recipes/combine-fields
+git clone https://github.com/aditya269/Pinot.git
+cd combine-fields
 ```
 
 Spin up a Pinot cluster using Docker Compose:

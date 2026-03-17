@@ -21,8 +21,8 @@
 ***
 
 ```bash
-git clone git@github.com:startreedata/pinot-recipes.git
-cd pinot-recipes/recipes/google-cloud-storage
+git clone https://github.com/aditya269/Pinot.git
+cd google-cloud-storage
 ```
 
 Navigate to https://console.cloud.google.com/storage/browser and create a bucket e.g. `pinot-events`

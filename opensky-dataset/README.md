@@ -22,8 +22,8 @@
 ***
 
 ```bash
-git clone git@github.com:startreedata/pinot-recipes.git
-cd pinot-recipes/recipes/opensky-dataset
+git clone https://github.com/aditya269/Pinot.git
+cd opensky-dataset
 ```
 
 Download CSV files from https://zenodo.org/record/7923702 and put them into the `data` directory

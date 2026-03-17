@@ -32,8 +32,8 @@ This is the code for the following recipe: https://dev.startree.ai/docs/pinot/re
 ***
 
 ```bash
-git clone git@github.com:startreedata/pinot-recipes.git
-cd pinot-recipes/recipes/update-json-index
+git clone https://github.com/aditya269/Pinot.git
+cd update-json-index
 ```
 
 Spin up a Pinot cluster using Docker Compose:

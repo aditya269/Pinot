@@ -22,8 +22,8 @@ This is the code for the following recipe: https://dev.startree.ai/docs/pinot/re
 ***
 
 ```bash
-git clone git@github.com:startreedata/pinot-recipes.git
-cd pinot-recipes/recipes/geospatial-indexing
+git clone https://github.com/aditya269/Pinot.git
+cd geospatial-indexing
 ```
 
 Spin up a Pinot cluster using Docker Compose:

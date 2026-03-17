@@ -26,8 +26,8 @@
 Clone this repository and navigate to this recipe:
 
 ```bash
-git clone git@github.com:startreedata/pinot-recipes.git
-cd pinot-recipes/recipes/import-csv-files-different-directories
+git clone https://github.com/aditya269/Pinot.git
+cd import-csv-files-different-directories
 ```
 
 Spin up a Pinot cluster using Docker Compose:

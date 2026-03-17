@@ -22,8 +22,8 @@
 ***
 
 ```bash
-git clone git@github.com:startreedata/pinot-recipes.git
-cd pinot-recipes/recipes/nypd-dataset
+git clone https://github.com/aditya269/Pinot.git
+cd nypd-dataset
 ```
 
 Download CSV files from https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Current-Year-To-Date-/5uac-w243 and put them into the `data` directory

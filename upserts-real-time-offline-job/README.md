@@ -22,8 +22,8 @@
 ***
 
 ```bash
-git clone git@github.com:startreedata/pinot-recipes.git
-cd pinot-recipes/recipes/upserts-real-time-offline-job
+git clone https://github.com/aditya269/Pinot.git
+cd upserts-real-time-offline-job
 ```
 
 Spin up a Pinot cluster using Docker Compose:

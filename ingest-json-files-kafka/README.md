@@ -24,8 +24,8 @@ This is the code for the following recipe: https://dev.startree.ai/docs/pinot/re
 Clone this repository and navigate to this recipe:
 
 ```bash
-git clone git@github.com:startreedata/pinot-recipes.git
-cd pinot-recipes/recipes/ingest-json-files-kafka
+git clone https://github.com/aditya269/Pinot.git
+cd ingest-json-files-kafka
 ```
 
 Spin up a Pinot cluster using Docker Compose:

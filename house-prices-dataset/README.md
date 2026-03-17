@@ -22,8 +22,8 @@
 ***
 
 ```bash
-git clone git@github.com:startreedata/pinot-recipes.git
-cd pinot-recipes/recipes/house-prices-dataset
+git clone https://github.com/aditya269/Pinot.git
+cd house-prices-dataset
 ```
 
 Download CSV files from https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads#yearly-file and put them into the `raw` directory.

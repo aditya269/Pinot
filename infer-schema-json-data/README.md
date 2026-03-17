@@ -16,8 +16,8 @@ This is the code for the following recipe: https://dev.startree.ai/docs/pinot/re
 Clone this repository and navigate to this recipe:
 
 ```bash
-git clone git@github.com:startreedata/pinot-recipes.git
-cd pinot-recipes/recipes/infer-schema-json-data
+git clone https://github.com/aditya269/Pinot.git
+cd infer-schema-json-data
 ```
 
 Infer schema from  [data/github.json](data/github.json):

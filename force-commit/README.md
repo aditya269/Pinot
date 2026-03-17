@@ -22,8 +22,8 @@
 ***
 
 ```bash
-git clone git@github.com:startreedata/pinot-recipes.git
-cd pinot-recipes/recipes/force-commit
+git clone https://github.com/aditya269/Pinot.git
+cd force-commit
 ```
 
 Spin up a Pinot cluster using Docker Compose:
