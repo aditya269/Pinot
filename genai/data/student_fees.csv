@@ -1,0 +1,6 @@
+fee_record_id,student_id,fee_type,semester,payment_status,total_fee,paid_amount,due_amount,payment_date
+3001,1001,Tuition,Semester 1,Paid,50000,50000,0,2026-01-10
+3002,1002,Tuition,Semester 1,Partial,50000,30000,20000,2026-01-12
+3003,1003,Tuition,Semester 1,Paid,50000,50000,0,2026-01-09
+3004,1004,Tuition,Semester 1,Overdue,50000,20000,30000,2026-01-15
+3005,1005,Tuition,Semester 1,Partial,50000,35000,15000,2026-01-11

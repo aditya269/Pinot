@@ -1,0 +1,11 @@
+exam_record_id,student_id,subject,exam_name,semester,marks,max_marks,exam_date
+2001,1001,Mathematics,Midterm,Semester 1,88.0,100,2026-01-15
+2002,1001,Programming,Midterm,Semester 1,92.0,100,2026-01-16
+2003,1002,Electronics,Midterm,Semester 1,81.0,100,2026-01-15
+2004,1002,Physics,Midterm,Semester 1,76.0,100,2026-01-16
+2005,1003,Mathematics,Midterm,Semester 1,95.0,100,2026-01-15
+2006,1003,Statistics,Midterm,Semester 1,91.0,100,2026-01-16
+2007,1004,Physics,Midterm,Semester 1,72.0,100,2026-01-15
+2008,1004,Lab Work,Midterm,Semester 1,78.0,100,2026-01-16
+2009,1005,Programming,Midterm,Semester 1,86.0,100,2026-01-15
+2010,1005,Databases,Midterm,Semester 1,89.0,100,2026-01-16

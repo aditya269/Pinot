@@ -1,0 +1,59 @@
+version: '3.7'
+services:
+  zookeeper:
+    image: zookeeper:3.8.0
+    hostname: zookeeper
+    container_name: zookeeper-mergesegments
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks: 
+      - mergesegments
+  pinot-controller:
+    image: apachepinot/pinot:1.0.0
+    command: "StartController -zkAddress zookeeper-mergesegments:2181 -dataDir /data"
+    container_name: "pinot-controller-mergesegments"
+    volumes:
+      - ./data:/data
+      - ./input:/input
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    depends_on:
+      - zookeeper
+    networks: 
+      - mergesegments
+  pinot-broker:
+    image: apachepinot/pinot:1.0.0
+    command: "StartBroker -zkAddress zookeeper-mergesegments:2181"
+    restart: unless-stopped
+    container_name: "pinot-broker-mergesegments"
+    ports:
+      - "8099:8099"
+    depends_on:
+      - pinot-controller
+    networks: 
+      - mergesegments
+  pinot-server:
+    image: apachepinot/pinot:1.0.0
+    command: "StartServer -zkAddress zookeeper-mergesegments:2181"
+    restart: unless-stopped
+    container_name: "pinot-server-mergesegments"
+    depends_on:
+      - pinot-broker
+    networks: 
+      - mergesegments
+  pinot-minion:
+    image: apachepinot/pinot:1.0.0
+    command: "StartMinion -zkAddress zookeeper-mergesegments:2181"
+    restart: unless-stopped
+    container_name: "pinot-minion-mergesegments"
+    depends_on:
+      - pinot-server
+    networks: 
+      - mergesegments
+networks:
+  mergesegments:
+    name: mergesegments

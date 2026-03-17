@@ -1,0 +1,101 @@
+{
+  "tableName": "cdr_data",
+  "tableType": "OFFLINE",
+  "segmentsConfig": {
+    "schemaName": "cdr_data",
+    "replication": "1",
+    "replicasPerPartition": "1",
+    "retentionTimeUnit": "DAYS",
+    "retentionTimeValue": "60",
+    "timeType": "DAYS",
+    "timeColumnName": "eventDate",
+    "segmentAssignmentStrategy": "BalanceNumSegmentAssignmentStrategy"
+  },
+  "ingestionConfig": {
+    "transformConfigs": [
+      {
+        "columnName": "UsageKB",
+        "transformFunction": "roundDecimal(MULT(DIV(Bytes, 1024), 1.0), 5)"
+      },
+      {
+        "columnName": "UsageMB",
+        "transformFunction": "roundDecimal(MULT(DIV(Bytes, 1048576), 1.0), 6)"
+      },
+      {
+        "columnName": "SessionDurationMinutes",
+        "transformFunction": "DIV(SessionDuration, 60)"
+      }
+    ],
+    "batchIngestionConfig": {
+      "segmentIngestionType": "APPEND",
+      "segmentIngestionFrequency": "DAILY"
+    }
+  },
+  "tenants": {
+    "broker": "DefaultTenant",
+    "server": "DefaultTenant"
+  },
+  "tableIndexConfig": {
+    "enableDefaultStarTree": false,
+    "loadMode": "MMAP",
+    "invertedIndexColumns": [
+      "accountName",
+      "distributor",
+      "iccid",
+      "customerGroup",
+      "subscriberId",
+      "eventDate",
+      "imsi",
+      "msisdn",
+      "carrier",
+      "serviceType",
+      "customerId",
+      "distributorId"
+    ],
+    "noDictionaryColumns": [
+      "BuyAmount",
+      "RetailAmount",
+      "ChargeAmount",
+      "ChargeBalance",
+      "UsageKB",
+      "UsageMB",
+      "Bytes",
+      "SessionDurationMinutes"
+    ],
+    "bloomFilterColumns": [
+      "imsi",
+      "msisdn"
+    ],
+    "rangeIndexColumns": [
+      "eventDate"
+    ],
+    "sortedColumn": [
+      "accountId"
+    ]
+  },
+  "metadata": {
+    "customConfigs": {}
+  },
+  "task": {
+    "taskTypeConfigsMap": {
+      "MergeRollupTask": {
+        "1d.mergeType": "rollup",
+        "1d.bucketTimePeriod": "1d",
+        "1d.bufferTimePeriod": "1d",
+        "1d.roundBucketTimePeriod": "1d",
+        "1d.maxNumRecordsPerSegment": "1000000",
+        "1d.maxNumRecordsPerTask": "5000000",
+        "BuyAmount.aggregationType": "sum",
+        "RetailAmount.aggregationType": "sum",
+        "ChargeAmount.aggregationType": "sum",
+        "ChargeBalance.aggregationType": "sum",
+        "UsageKB.aggregationType": "sum",
+        "UsageMB.aggregationType": "sum",
+        "Bytes.aggregationType": "sum",
+        "SessionDurationMinutes.aggregationType": "sum"
+      }
+    }
+  },
+  "routing": {},
+  "isDimTable": false
+}

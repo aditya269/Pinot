@@ -1,0 +1,29 @@
+{
+    "schemaName": "matches",
+    "dimensionFieldSpecs": [
+      {
+        "name": "round",
+        "dataType": "STRING"
+      },
+      {
+        "name": "winner",
+        "dataType": "STRING"
+      },
+      {
+        "name": "loser",
+        "dataType": "STRING"
+      },
+      {
+        "name": "score",
+        "dataType": "STRING"
+      }
+    ],
+    "dateTimeFieldSpecs": [
+      {
+        "name": "matchTime",
+        "dataType": "TIMESTAMP",
+        "format" : "1:MILLISECONDS:EPOCH",
+        "granularity": "1:MILLISECONDS"
+      }
+    ]
+}

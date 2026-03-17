@@ -1,0 +1,48 @@
+{
+  "schemaName": "student_exam",
+  "dimensionFieldSpecs": [
+    {
+      "name": "exam_record_id",
+      "dataType": "INT"
+    },
+    {
+      "name": "student_id",
+      "dataType": "INT"
+    },
+    {
+      "name": "subject",
+      "dataType": "STRING"
+    },
+    {
+      "name": "exam_name",
+      "dataType": "STRING"
+    },
+    {
+      "name": "semester",
+      "dataType": "STRING"
+    },
+    {
+      "name": "marks",
+      "dataType": "FLOAT"
+    },
+    {
+      "name": "max_marks",
+      "dataType": "INT"
+    },
+    {
+      "name": "exam_date",
+      "dataType": "STRING"
+    }
+  ],
+  "dateTimeFieldSpecs": [
+    {
+      "name": "last_updated_min",
+      "dataType": "LONG",
+      "format": "EPOCH",
+      "granularity": "1:MINUTES"
+    }
+  ],
+  "primaryKeyColumns": [
+    "exam_record_id"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "tableName":"people",
+  "tableType":"OFFLINE",
+  "segmentsConfig":{
+    "replication":1,
+    "schemaName":"people"
+  },
+  "tenants":{
+    "broker":"DefaultTenant",
+    "server":"DefaultTenant"
+  },
+  "tableIndexConfig":{
+    "loadMode":"MMAP"
+  },
+  "ingestionConfig":{
+    "batchIngestionConfig":{
+      "segmentIngestionType":"APPEND",
+      "segmentIngestionFrequency":"DAILY"
+    },
+    "transformConfigs":[
+      {
+        "columnName":"userId",
+        "transformFunction":"jsonPathString(payload, '$.userId')"
+      },
+      {
+        "columnName":"id",
+        "transformFunction":"arrayElementAtString(split(userId, '__'), 0)"
+      },
+      {
+        "columnName":"name",
+        "transformFunction":"arrayElementAtString(split(userId, '__'), 1)"
+      }
+
+    ]
+  },
+  "metadata":{}
+}

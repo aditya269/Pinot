@@ -1,0 +1,34 @@
+{
+  "tableName": "matches",
+  "tableType": "OFFLINE",
+  "segmentsConfig": {
+    "timeColumnName": "matchTime",
+    "schemaName": "matches",
+    "replication": "1",
+    "replicasPerPartition": "1"
+  },
+  "tenants": {
+    "broker": "DefaultTenant",
+    "server": "DefaultTenant"
+  },
+  "tableIndexConfig": {
+    "loadMode": "MMAP"
+  },
+  "ingestionConfig": {
+    "batchIngestionConfig": {
+      "segmentIngestionType": "APPEND",
+      "segmentIngestionFrequency": "DAILY"
+    },
+    "transformConfigs": []
+  },
+  "metadata": {},
+  "task": {
+    "taskTypeConfigsMap": {
+      "MergeRollupTask": {
+        "1day.mergeType": "concat",
+        "1day.bucketTimePeriod": "1d",
+        "1day.bufferTimePeriod": "5m"
+      }
+    }
+  }
+}

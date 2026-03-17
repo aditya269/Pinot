@@ -1,0 +1,43 @@
+{
+  "tableName": "events",
+  "tableType": "REALTIME",
+  "segmentsConfig": {
+    "timeColumnName": "timestamp",
+    "schemaName": "events",
+    "replication": "1",
+    "replicasPerPartition": "1"
+  },
+  "query" : {
+    "disableGroovy": false
+  },
+  "tenants": {},
+  "tableIndexConfig": {
+    "loadMode": "MMAP",
+    "streamConfigs": {
+      "streamType": "kafka",
+      "stream.kafka.topic.name": "events",
+      "stream.kafka.broker.list": "kafka-groovy:9093",
+      "stream.kafka.consumer.type": "lowlevel",
+      "stream.kafka.consumer.prop.auto.offset.reset": "smallest",
+      "stream.kafka.consumer.factory.class.name": "org.apache.pinot.plugin.stream.kafka20.KafkaConsumerFactory",
+      "stream.kafka.decoder.class.name": "org.apache.pinot.plugin.stream.kafka.KafkaJSONMessageDecoder"
+    }
+  },
+  "ingestionConfig": {
+    "batchIngestionConfig": {
+      "segmentIngestionType": "APPEND",
+      "segmentIngestionFrequency": "DAILY"
+    },
+    "transformConfigs": [
+      {
+        "columnName": "id",
+        "transformFunction": "Groovy({def jsonSlurper = new groovy.json.JsonSlurper(); def object = jsonSlurper.parseText(new groovy.json.JsonBuilder(payload).toPrettyString()); def result = object.after == null ? Long.valueOf(object.before.id) : Long.valueOf(object.after.id); return result}, payload)"
+      },
+      {
+        "columnName": "name",
+        "transformFunction": "Groovy({def jsonSlurper = new groovy.json.JsonSlurper(); def object = jsonSlurper.parseText(new groovy.json.JsonBuilder(payload).toPrettyString()); return object.firstName + ' ' + object.lastName}, payload)"
+      }
+    ]
+  },
+  "metadata": {}
+}

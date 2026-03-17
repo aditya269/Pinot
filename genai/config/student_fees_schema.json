@@ -1,0 +1,52 @@
+{
+  "schemaName": "student_fees",
+  "dimensionFieldSpecs": [
+    {
+      "name": "fee_record_id",
+      "dataType": "INT"
+    },
+    {
+      "name": "student_id",
+      "dataType": "INT"
+    },
+    {
+      "name": "fee_type",
+      "dataType": "STRING"
+    },
+    {
+      "name": "semester",
+      "dataType": "STRING"
+    },
+    {
+      "name": "payment_status",
+      "dataType": "STRING"
+    },
+    {
+      "name": "total_fee",
+      "dataType": "FLOAT"
+    },
+    {
+      "name": "paid_amount",
+      "dataType": "FLOAT"
+    },
+    {
+      "name": "due_amount",
+      "dataType": "FLOAT"
+    },
+    {
+      "name": "payment_date",
+      "dataType": "STRING"
+    }
+  ],
+  "dateTimeFieldSpecs": [
+    {
+      "name": "last_updated_min",
+      "dataType": "LONG",
+      "format": "EPOCH",
+      "granularity": "1:MINUTES"
+    }
+  ],
+  "primaryKeyColumns": [
+    "fee_record_id"
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "schemaName": "cdr_data",
+  "enableColumnBasedNullHandling": false,
+  "dimensionFieldSpecs": [
+    {
+      "name": "accountId",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": false
+    },
+    {
+      "name": "accountName",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": false
+    },
+    {
+      "name": "distributor",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": true
+    },
+    {
+      "name": "distributorId",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": true
+    },
+    {
+      "name": "customerGroup",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": true
+    },
+    {
+      "name": "customer",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": true
+    },
+    {
+      "name": "customerId",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": true
+    },
+    {
+      "name": "customerReference",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": true
+    },
+    {
+      "name": "msisdn",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": true
+    },
+    {
+      "name": "imsi",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": true
+    },
+    {
+      "name": "iccid",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": true
+    },
+    {
+      "name": "subscriberId",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": true
+    },
+    {
+      "name": "serviceType",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": true
+    },
+    {
+      "name": "carrier",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": true
+    },
+    {
+      "name": "buyCurrency",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": true
+    },
+    {
+      "name": "retailCurrency",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": true
+    },
+    {
+      "name": "chargeCurrency",
+      "dataType": "STRING",
+      "fieldType": "DIMENSION",
+      "notNull": true
+    }
+  ],
+  "metricFieldSpecs": [
+    {
+      "name": "BuyAmount",
+      "dataType": "DOUBLE",
+      "fieldType": "METRIC",
+      "notNull": false
+    },
+    {
+      "name": "RetailAmount",
+      "dataType": "DOUBLE",
+      "fieldType": "METRIC",
+      "notNull": false
+    },
+    {
+      "name": "ChargeAmount",
+      "dataType": "DOUBLE",
+      "fieldType": "METRIC",
+      "notNull": false
+    },
+    {
+      "name": "ChargeBalance",
+      "dataType": "DOUBLE",
+      "fieldType": "METRIC",
+      "notNull": false
+    },
+    {
+      "name": "UsageKB",
+      "dataType": "DOUBLE",
+      "fieldType": "METRIC",
+      "notNull": false
+    },
+    {
+      "name": "UsageMB",
+      "dataType": "DOUBLE",
+      "fieldType": "METRIC",
+      "notNull": false
+    },
+    {
+      "name": "Bytes",
+      "dataType": "DOUBLE",
+      "fieldType": "METRIC",
+      "notNull": false
+    },
+    {
+      "name": "SessionDurationMinutes",
+      "dataType": "DOUBLE",
+      "fieldType": "METRIC",
+      "notNull": false
+    }
+  ],
+  "dateTimeFieldSpecs": [
+    {
+      "name": "eventDate",
+      "dataType": "STRING",
+      "fieldType": "DATE_TIME",
+      "notNull": true,
+      "format": "1:DAYS:SIMPLE_DATE_FORMAT:yyyy-MM-dd",
+      "granularity": "1:DAYS"
+    }
+  ]
+}

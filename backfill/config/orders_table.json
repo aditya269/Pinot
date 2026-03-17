@@ -1,0 +1,39 @@
+{
+  "tableName": "orders",
+  "tableType": "REALTIME",
+  "segmentsConfig": {
+    "timeColumnName": "ts",
+    "timeType": "MILLISECONDS",
+    "segmentPushType": "APPEND",
+    "segmentAssignmentStrategy": "BalanceNumSegmentAssignmentStrategy",
+    "schemaName": "orders",
+    "replicasPerPartition": "1"
+  },
+  "task": {
+    "taskTypeConfigsMap": {
+      "RealtimeToOfflineSegmentsTask": {
+        "bucketTimePeriod": "2h",
+        "bufferTimePeriod": "1m"
+      }
+    }
+  },
+  "tenants": {},
+  "tableIndexConfig": {
+    "loadMode": "MMAP",
+    "streamConfigs": {
+      "streamType": "kafka",
+      "stream.kafka.consumer.type": "lowLevel",
+      "stream.kafka.topic.name": "orders",
+      "stream.kafka.decoder.class.name": "org.apache.pinot.plugin.stream.kafka.KafkaJSONMessageDecoder",
+      "stream.kafka.consumer.factory.class.name": "org.apache.pinot.plugin.stream.kafka20.KafkaConsumerFactory",
+      "stream.kafka.broker.list": "kafka:9093",
+      "realtime.segment.flush.threshold.rows": 5
+    }
+  },
+  "metadata": {
+    "customConfigs": {}
+  },
+  "routing": {
+    "instanceSelectorType": "strictReplicaGroup"
+  }
+}

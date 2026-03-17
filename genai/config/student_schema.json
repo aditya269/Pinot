@@ -1,0 +1,48 @@
+{
+  "schemaName": "student",
+  "dimensionFieldSpecs": [
+    {
+      "name": "student_id",
+      "dataType": "INT"
+    },
+    {
+      "name": "name",
+      "dataType": "STRING"
+    },
+    {
+      "name": "age",
+      "dataType": "INT"
+    },
+    {
+      "name": "grade",
+      "dataType": "STRING"
+    },
+    {
+      "name": "department",
+      "dataType": "STRING"
+    },
+    {
+      "name": "city",
+      "dataType": "STRING"
+    },
+    {
+      "name": "gpa",
+      "dataType": "FLOAT"
+    },
+    {
+      "name": "attendance_pct",
+      "dataType": "FLOAT"
+    }
+  ],
+  "dateTimeFieldSpecs": [
+    {
+      "name": "last_updated_min",
+      "dataType": "LONG",
+      "format": "EPOCH",
+      "granularity": "1:MINUTES"
+    }
+  ],
+  "primaryKeyColumns": [
+    "student_id"
+  ]
+}
