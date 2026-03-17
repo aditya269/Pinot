@@ -112,12 +112,15 @@ student_id,name,age,grade,department,city,gpa,attendance_pct
 
 ## Ask Your Questions
 
-Run the command below and ask a question that the documentation you loaded can answer.
+Use the single command below to ask questions over the structured Pinot tables in this recipe, including `student`, `student_exam`, `student_fees`, and `cdr_data`.
 
 ```bash
 make question
-make student_question
 ```
+
+`make student_question` remains available as an alias to the same structured query mode.
+
+If you still want the old documentation RAG mode, run the container directly with `QUERY_MODE=documentation`.
 
 In [genai.py](docker/genai.py), you will see the below statement. The `VECTOR_SIMILARITY` function takes the embedding column and the search query embedding and returns the top `10` most similar vectors.
 

@@ -189,7 +189,10 @@ cdr_offline_loader:
 question: clients
 	@docker run -it \
 	 	--network $(DOCKER_NETWORK) \
+		--volume $(shell pwd)/output:/code/output \
 		-e OPENAI_API_KEY=${OPENAI_API_KEY} \
+		-e QUERY_MODE=pinot \
+		-e OUTPUT_DIR=/code/output \
 		startree/genai \
 		python genai.py ${QUERY}
 
@@ -198,7 +201,7 @@ student_question: clients
 	 	--network $(DOCKER_NETWORK) \
 		--volume $(shell pwd)/output:/code/output \
 		-e OPENAI_API_KEY=${OPENAI_API_KEY} \
-		-e QUERY_MODE=student \
+		-e QUERY_MODE=pinot \
 		-e OUTPUT_DIR=/code/output \
 		startree/genai \
 		python genai.py

@@ -48,6 +48,9 @@ cdr_offline_tables:
 cdr_hybrid_tables:
 	$(MAKE) -C genai cdr_hybrid_tables
 
+question:
+	$(MAKE) -C genai question
+
 student_question:
 	$(MAKE) -C genai student_question
 endif

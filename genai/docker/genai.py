@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
+import json
 import os
 import re
 from pathlib import Path
+from urllib.request import urlopen
 
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
@@ -22,58 +24,25 @@ Answer the question based only on the following context:
 Answer the question based on the above context: {question}
 """
 
-STUDENT_SQL_PROMPT = """
+PINOT_SQL_PROMPT = """
 You write Apache Pinot SQL for these tables.
 
-Table `student`:
-- student_id INT
-- name STRING
-- age INT
-- grade STRING
-- department STRING
-- city STRING
-- gpa FLOAT
-- attendance_pct FLOAT
-
-Table `student_exam`:
-- exam_record_id INT
-- student_id INT
-- subject STRING
-- exam_name STRING
-- semester STRING
-- marks FLOAT
-- max_marks INT
-- exam_date STRING
-
-Table `student_fees`:
-- fee_record_id INT
-- student_id INT
-- fee_type STRING
-- semester STRING
-- payment_status STRING
-- total_fee FLOAT
-- paid_amount FLOAT
-- due_amount FLOAT
-- payment_date STRING
+{table_catalog}
 
 Join rule:
-- When a question needs both student details and exam details, join `student s` with `student_exam se` on `s.student_id = se.student_id`.
-- When a question needs both student details and fee details, join `student s` with `student_fees sf` on `s.student_id = sf.student_id`.
-- When a question needs exam details and fee details together, join through `student` using `student_exam se`, `student s`, and `student_fees sf`.
-- When the question can be answered from a single table, do not join.
+{join_guidance}
 
 Rules:
 - Only generate a single SELECT query.
 - Never use INSERT, UPDATE, DELETE, DROP, or ALTER.
 - Prefer simple Pinot-compatible SQL.
-- If the user asks about "class", treat that as the `grade` column.
-- Use table aliases `s` for `student`, `se` for `student_exam`, and `sf` for `student_fees` when joining.
+- If the user asks about "class", treat that as the `grade` column when the `student` table exists.
 - Return only SQL, with no explanation and no markdown fences.
 
 Question: {question}
 """
 
-STUDENT_ANSWER_PROMPT = """
+PINOT_ANSWER_PROMPT = """
 You are answering an end user.
 Use only the SQL result below.
 Do not write SQL.
@@ -88,7 +57,7 @@ SQL result:
 Question: {question}
 """
 
-STUDENT_CHART_ANSWER_PROMPT = """
+PINOT_CHART_ANSWER_PROMPT = """
 You already have the SQL result and a chart has been generated from it.
 Do not say that you cannot create or show a chart.
 Do not write SQL.
@@ -156,9 +125,86 @@ class PinotVector():
 
 
 class PinotStudent:
-    def __init__(self, host, port=8099, path="/query/sql", scheme="http") -> None:
+    def __init__(
+        self,
+        host,
+        port=8099,
+        path="/query/sql",
+        scheme="http",
+        controller_host="pinot-controller",
+        controller_port=9000,
+    ) -> None:
         self.conn = connect(host=host, port=port, path=path, scheme=scheme)
         self.model = ChatOpenAI()
+        self.controller_host = controller_host
+        self.controller_port = controller_port
+        self.allowed_tables, self.table_catalog = self._load_table_catalog()
+
+    def _fetch_json(self, path: str) -> dict:
+        url = f"http://{self.controller_host}:{self.controller_port}{path}"
+        with urlopen(url) as response:
+            return json.load(response)
+
+    def _extract_schema_name(self, table_config: dict, table_name: str) -> str:
+        if "OFFLINE" in table_config and table_config["OFFLINE"]:
+            return table_config["OFFLINE"]["segmentsConfig"]["schemaName"]
+        if "REALTIME" in table_config and table_config["REALTIME"]:
+            return table_config["REALTIME"]["segmentsConfig"]["schemaName"]
+        if "segmentsConfig" in table_config:
+            return table_config["segmentsConfig"]["schemaName"]
+        raise RuntimeError(f"Unable to find schema name for table {table_name}")
+
+    def _build_join_guidance(self, tables: set[str]) -> str:
+        guidance = []
+        if {"student", "student_exam"}.issubset(tables):
+            guidance.append(
+                "- When a question needs both student details and exam details, join `student s` with `student_exam se` on `s.student_id = se.student_id`."
+            )
+        if {"student", "student_fees"}.issubset(tables):
+            guidance.append(
+                "- When a question needs both student details and fee details, join `student s` with `student_fees sf` on `s.student_id = sf.student_id`."
+            )
+        if {"student", "student_exam", "student_fees"}.issubset(tables):
+            guidance.append(
+                "- When a question needs exam details and fee details together, join through `student` using `student_exam se`, `student s`, and `student_fees sf`."
+            )
+        if "cdr_data" in tables and "student" in tables:
+            guidance.append(
+                "- Do not join `cdr_data c` to student tables unless the user explicitly asks and the join key is clear from the question."
+            )
+        guidance.append("- When a question can be answered from a single table, do not join.")
+        guidance.append("- Use short aliases when helpful, for example `s`, `se`, `sf`, or `c`.")
+        return "\n".join(guidance)
+
+    def _load_table_catalog(self) -> tuple[set[str], str]:
+        excluded = {
+            name.strip().lower()
+            for name in os.environ.get("PINOT_EXCLUDED_TABLES", "documentation").split(",")
+            if name.strip()
+        }
+        table_names = self._fetch_json("/tables").get("tables", [])
+        allowed_tables = []
+        table_sections = []
+        for table_name in sorted(table_names):
+            if table_name.lower() in excluded:
+                continue
+            table_config = self._fetch_json(f"/tables/{table_name}")
+            schema_name = self._extract_schema_name(table_config, table_name)
+            schema = self._fetch_json(f"/schemas/{schema_name}")
+            field_specs = []
+            for group_name in ("dimensionFieldSpecs", "metricFieldSpecs", "dateTimeFieldSpecs"):
+                for field in schema.get(group_name, []):
+                    field_specs.append(f"- {field['name']} {field['dataType']}")
+            if not field_specs:
+                continue
+            allowed_tables.append(table_name)
+            table_sections.append(f"Table `{table_name}`:\n" + "\n".join(field_specs))
+
+        allowed_table_set = set(allowed_tables)
+        if not allowed_table_set:
+            raise RuntimeError("No Pinot tables were discovered for query mode.")
+        table_catalog = "\n\n".join(table_sections)
+        return allowed_table_set, table_catalog
 
     def _clean_sql(self, response_text: str) -> str:
         sql = response_text.strip()
@@ -168,13 +214,18 @@ class PinotStudent:
         return sql.strip().rstrip(";")
 
     def generate_sql(self, question: str) -> str:
-        prompt_template = ChatPromptTemplate.from_template(STUDENT_SQL_PROMPT)
-        prompt = prompt_template.format(question=question)
+        prompt_template = ChatPromptTemplate.from_template(PINOT_SQL_PROMPT)
+        join_guidance = self._build_join_guidance(self.allowed_tables)
+        prompt = prompt_template.format(
+            table_catalog=self.table_catalog,
+            join_guidance=join_guidance,
+            question=question,
+        )
         response = self.model.invoke(prompt)
         sql = self._clean_sql(response.content)
         if not sql.lower().startswith("select"):
             raise RuntimeError(f"Refusing to run non-SELECT SQL: {sql}")
-        if not references_allowed_tables(sql):
+        if not references_allowed_tables(sql, self.allowed_tables):
             raise RuntimeError(f"Refusing to run SQL against unexpected tables: {sql}")
         return sql
 
@@ -187,15 +238,15 @@ class PinotStudent:
         sql = self.generate_sql(question)
         df = self.run_query(sql)
         if df.empty:
-            return sql, "No matching student rows were found.", df, None
+            return sql, "No matching rows were found.", df, None
 
         context_text = df.to_string(index=False)
         chart_path = None
         if wants_chart(question):
             chart_path = render_chart(df, question)
-            prompt_template = ChatPromptTemplate.from_template(STUDENT_CHART_ANSWER_PROMPT)
+            prompt_template = ChatPromptTemplate.from_template(PINOT_CHART_ANSWER_PROMPT)
         else:
-            prompt_template = ChatPromptTemplate.from_template(STUDENT_ANSWER_PROMPT)
+            prompt_template = ChatPromptTemplate.from_template(PINOT_ANSWER_PROMPT)
 
         prompt = prompt_template.format(context=context_text, question=question)
         response = self.model.invoke(prompt)
@@ -207,10 +258,10 @@ def wants_chart(question: str) -> bool:
     return any(keyword in lowered for keyword in CHART_KEYWORDS)
 
 
-def references_allowed_tables(sql: str) -> bool:
+def references_allowed_tables(sql: str, allowed_tables: set[str]) -> bool:
     lowered = sql.lower()
-    return not bool(re.search(r"\bfrom\s+(?!student\b|student_exam\b|student_fees\b)", lowered)) and \
-        not bool(re.search(r"\bjoin\s+(?!student\b|student_exam\b|student_fees\b)", lowered))
+    referenced = re.findall(r"\b(?:from|join)\s+([a-zA-Z_][a-zA-Z0-9_]*)", lowered)
+    return all(table in allowed_tables for table in referenced)
 
 
 def pick_chart_columns(df: pd.DataFrame):
@@ -344,8 +395,8 @@ def run_student_mode():
 
 
 if __name__ == "__main__":
-    query_mode = os.environ.get("QUERY_MODE", "documentation").strip().lower()
-    if query_mode == "student":
+    query_mode = os.environ.get("QUERY_MODE", "pinot").strip().lower()
+    if query_mode in ("student", "pinot"):
         run_student_mode()
     else:
         run_documentation_mode()
